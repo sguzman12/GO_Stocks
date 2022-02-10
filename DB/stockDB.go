@@ -1,7 +1,7 @@
 package db
 
 import (
-	repo "Main/Repositories"
+	repos "Main/repository"
 	"database/sql"
 	// "fmt"
 	// "github.com/go-pg/pg/v10"
@@ -22,6 +22,6 @@ func NewStockRepo(db *sql.DB) *StockRepo {
 	}
 }
 
-func (r *StockRepo) FindByID(ID int) (*repo.Data, error) {
-	return &repo.Data{}, nil
+func (r *StockRepo) FindByID(ID int) (*repos.Data, error) {
+	return &repos.Data{}, nil
 }

@@ -1,8 +1,8 @@
 package main
 
 import (
-	structs "Main/Structs"
-	utilities "Main/Utilities"
+	entity "Main/entity"
+	utils "Main/utility"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -13,7 +13,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type Stock structs.Stock
+type Stock entity.Stock
 
 var Stocks []Stock
 
@@ -60,7 +60,7 @@ func main() {
 	}
 
 	// Connect to DB
-	utilities.ConnectDB()
+	utils.ConnectDB()
 
 	handleRequests()
 }

@@ -1,4 +1,4 @@
-package structs
+package entity
 
 type Stock struct {
 	AlphaID     string  `json:"AlphaID"`
