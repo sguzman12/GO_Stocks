@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -51,6 +52,13 @@ func returnSingleStock(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// load .env file
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
 	// Connect to DB
 	utilities.ConnectDB()
 	Stocks = []Stock{
