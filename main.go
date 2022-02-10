@@ -61,9 +61,6 @@ func main() {
 
 	// Connect to DB
 	utilities.ConnectDB()
-	Stocks = []Stock{
-		Stock{AlphaID: "goog", CompanyName: "Google", Value: float32(342.44)},
-		Stock{AlphaID: "appl", CompanyName: "Apple", Value: float32(288.21)},
-	}
+
 	handleRequests()
 }
