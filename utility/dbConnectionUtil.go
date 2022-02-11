@@ -9,11 +9,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-// type Database struct {
-// 	host, user, password, dbname string
-// 	port                         int
-// }
-
 func ConnectDB() {
 	var (
 		host      = os.Getenv("host")
