@@ -12,6 +12,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/rs/cors"
 )
 
 type Stock entity.Stock
@@ -20,11 +21,25 @@ var Stocks []Stock
 
 func handleRequests() {
 	router := mux.NewRouter().StrictSlash(true)
+	// Where ORIGIN_ALLOWED is like `scheme://dns[:port]`, or `*` (insecure)
+	// headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
+	// originsOk := handlers.AllowedOrigins([]string{os.Getenv("ORIGIN_ALLOWED")})
+	// methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 
-	router.HandleFunc("/", homePage)
-	router.HandleFunc("/stocks", returnAllStocks)
-	router.HandleFunc("/stocks/{id}", returnSingleStock)
-	log.Fatal(http.ListenAndServe(":10000", router))
+	router.HandleFunc("/", homePage).Methods("GET", "OPTIONS")
+	router.HandleFunc("/stocks", returnAllStocks).Methods("GET", "OPTIONS")
+	router.HandleFunc("/stocks/{id}", returnSingleStock).Methods("GET", "OPTIONS")
+
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:10000"},
+		AllowCredentials: true,
+	})
+
+	handler := c.Handler(router)
+
+	log.Fatal(http.ListenAndServe(":10000", handler))
+
+	// log.Fatal(http.ListenAndServe(":10000", handlers.CORS(originsOk, headersOk, methodsOk)(router)))
 }
 
 func homePage(w http.ResponseWriter, r *http.Request) {
@@ -34,11 +49,19 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 func returnAllStocks(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint Hit: returnAllStocks")
+	//Allow CORS here By * or specific origin
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Origin, Access-Control-Allow-Headers")
 	json.NewEncoder(w).Encode(Stocks)
 }
 
 func returnSingleStock(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint Hit: returnSingleStock")
+	//Allow CORS here By * or specific origin
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Origin, Access-Control-Allow-Headers")
 
 	vars := mux.Vars(r)
 	key := vars["id"]
