@@ -12,7 +12,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-	"github.com/rs/cors"
 )
 
 type Stock entity.Stock
@@ -20,26 +19,14 @@ type Stock entity.Stock
 var Stocks []Stock
 
 func handleRequests() {
-	router := mux.NewRouter().StrictSlash(true)
-	// Where ORIGIN_ALLOWED is like `scheme://dns[:port]`, or `*` (insecure)
-	// headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
-	// originsOk := handlers.AllowedOrigins([]string{os.Getenv("ORIGIN_ALLOWED")})
-	// methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+	router := mux.NewRouter()
 
 	router.HandleFunc("/", homePage).Methods("GET", "OPTIONS")
-	router.HandleFunc("/stocks", returnAllStocks).Methods("GET", "OPTIONS")
+	router.HandleFunc("/stocks/", returnAllStocks).Methods("GET", "OPTIONS")
 	router.HandleFunc("/stocks/{id}", returnSingleStock).Methods("GET", "OPTIONS")
 
-	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:10000"},
-		AllowCredentials: true,
-	})
+	log.Fatal(http.ListenAndServe(":10000", router))
 
-	handler := c.Handler(router)
-
-	log.Fatal(http.ListenAndServe(":10000", handler))
-
-	// log.Fatal(http.ListenAndServe(":10000", handlers.CORS(originsOk, headersOk, methodsOk)(router)))
 }
 
 func homePage(w http.ResponseWriter, r *http.Request) {
