@@ -9,7 +9,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func ConnectDB() {
+func ConnectDB() *sql.DB {
 	var (
 		host      = os.Getenv("host")
 		port, err = strconv.Atoi(os.Getenv("port"))
@@ -32,6 +32,7 @@ func ConnectDB() {
 	CheckError(err)
 
 	fmt.Println("Connected!")
+	return db
 }
 
 func CheckError(err error) {
